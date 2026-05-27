@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sayantan Roy — Student. Olympian. Explorer.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #03060f;
+    --bg2: #060d1c;
+    --surface: #0a1628;
+    --surface2: #0f1e35;
+    --accent: #4fc3f7;
+    --accent2: #e040fb;
+    --gold: #ffd54f;
+    --text: #e8f4fd;
+    --text-muted: #7b9bb8;
+    --border: rgba(79,195,247,0.15);
+    --glow: rgba(79,195,247,0.3);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-trail {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.15s ease, opacity 0.3s;
+    opacity: 0.4;
+    mix-blend-mode: screen;
+  }
+
+  /* Stars background */
+  .stars-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4rem;
+    background: linear-gradient(to bottom, rgba(3,6,15,0.95), transparent);
+    backdrop-filter: blur(2px);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .hero-content {
+    text-align: center;
+    max-width: 900px;
+    padding: 2rem;
+    animation: fadeUp 1.2s ease forwards;
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(4rem, 10vw, 9rem);
+    font-weight: 300;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff 0%, var(--accent) 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.3em;
+  }
+  .hero-name span { font-style: italic; }
+  .hero-tagline {
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .hero-description {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(232,244,253,0.7);
+    line-height: 1.7;
+    max-width: 650px;
+    margin: 0 auto 3rem;
+  }
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+  .badge {
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--border);
+    background: rgba(79,195,247,0.05);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .badge:hover {
+    background: rgba(79,195,247,0.15);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .badge.gold { border-color: rgba(255,213,79,0.3); color: var(--gold); background: rgba(255,213,79,0.05); }
+  .badge.gold:hover { background: rgba(255,213,79,0.1); border-color: var(--gold); }
+
+  .hero-scroll {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    animation: bounce 2s infinite;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+
+  /* SECTIONS */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 7rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 80px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 3rem;
+    color: var(--text);
+  }
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  /* ACHIEVEMENTS GRID */
+  .achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+  .achievement-card {
+    background: var(--bg2);
+    padding: 2.5rem;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+  .achievement-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2));
+    transition: height 0.4s ease;
+  }
+  .achievement-card:hover::before { height: 100%; }
+  .achievement-card:hover { background: var(--surface); }
+  .achievement-card:hover { transform: translate(-2px,-2px); }
+
+  .achievement-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+    filter: drop-shadow(0 0 10px var(--accent));
+  }
+  .achievement-tier {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .achievement-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .achievement-desc {
+    font-size: 0.72rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+  }
+  .achievement-year {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 0.6rem;
+    color: var(--border);
+    letter-spacing: 0.1em;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0;
+    border: 1px solid var(--border);
+    margin: 5rem 0;
+  }
+  .stat-item {
+    padding: 3rem 2rem;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-item:hover { background: var(--surface); }
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+    text-shadow: 0 0 30px var(--glow);
+  }
+  .stat-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+  }
+
+  /* INTERESTS */
+  .interests-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    margin-top: 3rem;
+  }
+  .interest-category {
+    margin-bottom: 2rem;
+  }
+  .interest-cat-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 1.2rem;
+  }
+  .interest-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .interest-tag {
+    padding: 0.5rem 1.2rem;
+    border: 1px solid rgba(224,64,251,0.2);
+    background: rgba(224,64,251,0.04);
+    font-size: 0.7rem;
+    color: rgba(232,244,253,0.8);
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+    transition: all 0.3s;
+  }
+  .interest-tag:hover {
+    border-color: var(--accent2);
+    background: rgba(224,64,251,0.1);
+    transform: translateY(-2px);
+  }
+
+  .languages-grid {
+    display: grid;
+    gap: 1rem;
+  }
+  .lang-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .lang-name {
+    font-size: 0.72rem;
+    color: var(--text);
+    width: 100px;
+    flex-shrink: 0;
+  }
+  .lang-bar {
+    flex: 1;
+    height: 2px;
+    background: var(--surface2);
+    position: relative;
+    overflow: hidden;
+  }
+  .lang-fill {
+    position: absolute;
+    left: 0; top: 0;
+    height: 100%;
+    background: linear-gradient(to right, var(--accent), var(--accent2));
+    transition: width 1.5s ease;
+    width: 0;
+  }
+  .lang-level {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    width: 60px;
+    text-align: right;
+  }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    margin-top: 3rem;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+  .timeline-item {
+    position: relative;
+    padding: 0 0 3rem 2.5rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.6s ease;
+  }
+  .timeline-item.visible { opacity: 1; transform: translateX(0); }
+  .timeline-dot {
+    position: absolute;
+    left: -5.5px;
+    top: 5px;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    transition: all 0.3s;
+  }
+  .timeline-item:hover .timeline-dot {
+    background: var(--accent);
+    box-shadow: 0 0 15px var(--glow);
+  }
+  .timeline-year {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+  .timeline-event {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+  .timeline-detail {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    border-top: 1px solid var(--border);
+    padding-top: 6rem;
+    text-align: center;
+  }
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 2rem;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: -100%;
+    width: 100%;
+    height: 1px;
+    background: var(--accent);
+    transition: left 0.4s ease;
+  }
+  .contact-link:hover::before { left: 0; }
+  .contact-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(79,195,247,0.05);
+    transform: translateY(-3px);
+  }
+  .contact-link svg { width: 18px; height: 18px; }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 3rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    opacity: 0.6;
+  }
+
+  /* GLOWING ORB decoration */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(120px);
+    z-index: 0;
+    opacity: 0.08;
+  }
+  .orb-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -200px; }
+  .orb-2 { width: 400px; height: 400px; background: var(--accent2); bottom: 10%; left: -100px; }
+
+  /* horizontal rule deco */
+  .h-rule {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 auto 5rem;
+  }
+
+  /* responsive */
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    .interests-container { grid-template-columns: 1fr; gap: 2rem; }
+    section { padding: 5rem 1.5rem; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .stat-item:nth-child(2) { border-right: none; }
+  }
+
+  /* Animate on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.15s; }
+  .reveal-delay-2 { transition-delay: 0.3s; }
+  .reveal-delay-3 { transition-delay: 0.45s; }
+
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<canvas class="stars-canvas" id="starsCanvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">SR</a>
+  <ul class="nav-links">
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#journey">Journey</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Student · Olympian · Explorer</div>
+    <h1 class="hero-name">Sayantan<br><span>Roy</span></h1>
+    <p class="hero-tagline">Khulna, Bangladesh &nbsp;·&nbsp; CAIE GCSE O Level 2027</p>
+    <p class="hero-description">A young mind reaching for the stars — from the classrooms of South Herald English School to the stages of international olympiads across Russia, Malaysia & beyond.</p>
+    <div class="hero-badges">
+      <span class="badge gold">🏅 OWAO 2025 — Honorable Mention</span>
+      <span class="badge gold">🏆 Bangladesh Physics Olympiad National Winner '25 & '26</span>
+      <span class="badge gold">🌏 IAO 2025 — International Representative</span>
+      <span class="badge">Global Leadership Summit — Kuala Lumpur</span>
+      <span class="badge">NEO 2026 National Winner</span>
+      <span class="badge">Best Speaker — IDP IELTS Debate</span>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      scroll
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<section>
+  <div class="stats-row reveal">
+    <div class="stat-item">
+      <span class="stat-number" data-target="3">0</span>
+      <span class="stat-label">International<br>Representations</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="6">0</span>
+      <span class="stat-label">National<br>Olympiads</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="3">0</span>
+      <span class="stat-label">Languages<br>Fluent</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="15">0</span>
+      <span class="stat-label">Years<br>Old</span>
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="section-label">Recognition</div>
+  <h2 class="section-title">Notable <em>Achievements</em></h2>
+
+  <div class="achievements-grid">
+
+    <div class="achievement-card reveal">
+      <span class="achievement-icon">🌌</span>
+      <span class="achievement-tier">International · Gold</span>
+      <div class="achievement-title">4th Open World Astronomy Olympiad (OWAO)</div>
+      <p class="achievement-desc">Represented Bangladesh at OWAO 2025 in Sochi, Russia — earning the prestigious Honorable Mention award on the international stage.</p>
+      <span class="achievement-year">2025</span>
+    </div>
+
+    <div class="achievement-card reveal reveal-delay-1">
+      <span class="achievement-icon">🔭</span>
+      <span class="achievement-tier">International · Diploma</span>
+      <div class="achievement-title">29th International Astronomy Olympiad (IAO)</div>
+      <p class="achievement-desc">Selected twice through national camps of Bangladesh Astro Olympiad, qualifying regional and national rounds to earn a diploma at IAO 2025.</p>
+      <span class="achievement-year">2025</span>
+    </div>
+
+    <div class="achievement-card reveal reveal-delay-2">
+      <span class="achievement-icon">⚛️</span>
+      <span class="achievement-tier">National · Champion</span>
+      <div class="achievement-title">Bangladesh Physics Olympiad — National Winner</div>
+      <p class="achievement-desc">Clinched the national title at Bangladesh Physics Olympiad in consecutive years, demonstrating exceptional mastery of physics concepts.</p>
+      <span class="achievement-year">2025 & 2026</span>
+    </div>
+
+    <div class="achievement-card reveal">
+      <span class="achievement-icon">🌍</span>
+      <span class="achievement-tier">National · Champion</span>
+      <div class="achievement-title">National Earth Olympiad — National Winner</div>
+      <p class="achievement-desc">National winner at NEO 2026, also completing the Green Day Training (GDT) in earlier rounds — excelling in Earth sciences.</p>
+      <span class="achievement-year">2026</span>
+    </div>
+
+    <div class="achievement-card reveal reveal-delay-1">
+      <span class="achievement-icon">🌐</span>
+      <span class="achievement-tier">International · Delegate</span>
+      <div class="achievement-title">Global Leadership Summit — Kuala Lumpur</div>
+      <p class="achievement-desc">Participated and represented Bangladesh as an international delegate at the Global Leadership Summit in Kuala Lumpur, Malaysia.</p>
+      <span class="achievement-year">Recent</span>
+    </div>
+
+    <div class="achievement-card reveal reveal-delay-2">
+      <span class="achievement-icon">🎙️</span>
+      <span class="achievement-tier">Award · Speaker</span>
+      <div class="achievement-title">Best Speaker — IDP IELTS Kids Debate 2024</div>
+      <p class="achievement-desc">Honored as Best Speaker at IDP-IELTS (Khulna Branch) Kids Debate Program 2024, with 1st Runners-Up at Lexicon English Olympiad 2026.</p>
+      <span class="achievement-year">2024–26</span>
+    </div>
+
+    <div class="achievement-card reveal">
+      <span class="achievement-icon">🏅</span>
+      <span class="achievement-tier">Regional · Champion</span>
+      <div class="achievement-title">Khulna Divisional City Champion</div>
+      <p class="achievement-desc">Divisional city champion across multiple competitions including Bangabandhu Srijonshil Medha Onneson, Shisu Academy and several cultural programs.</p>
+      <span class="achievement-year">Multiple</span>
+    </div>
+
+    <div class="achievement-card reveal reveal-delay-1">
+      <span class="achievement-icon">🚀</span>
+      <span class="achievement-tier">Regional · Qualifier</span>
+      <div class="achievement-title">Multiple National Olympiad Qualifiers</div>
+      <p class="achievement-desc">Secured positions in regionals of Bangladesh Junior Science Olympiad, National Earth Olympiad, and Bangladesh Olympiad on Astronomy & Astrophysics.</p>
+      <span class="achievement-year">Ongoing</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section id="journey">
+  <div class="section-label">Timeline</div>
+  <h2 class="section-title">The <em>Journey</em></h2>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2024</div>
+      <div class="timeline-event">Best Speaker — IDP IELTS Debate, Khulna</div>
+      <div class="timeline-detail">Recognized for oratory and argumentation skills at IDP-IELTS Kids Debate Program, Khulna Branch.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2025</div>
+      <div class="timeline-event">National Winner — Bangladesh Physics Olympiad</div>
+      <div class="timeline-detail">First national title in physics — beginning of a remarkable olympiad run across multiple disciplines.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2025</div>
+      <div class="timeline-event">OWAO 2025 — Sochi, Russia 🇷🇺</div>
+      <div class="timeline-detail">Represented Bangladesh at the 4th Open World Astronomy Olympiad, earning the Honorable Mention award on the global stage.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2025</div>
+      <div class="timeline-event">IAO 2025 — Diploma Participation</div>
+      <div class="timeline-detail">Selected twice through Bangladesh national astro-olympiad camps, earning international representation at the 29th IAO.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2025–26</div>
+      <div class="timeline-event">Global Leadership Summit — Kuala Lumpur 🇲🇾</div>
+      <div class="timeline-detail">International delegate representing Bangladesh at this prestigious global youth leadership platform.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2026</div>
+      <div class="timeline-event">National Winner — NEO 2026 & BPhO 2026</div>
+      <div class="timeline-detail">Dual national victories — National Earth Olympiad 2026 and Bangladesh Physics Olympiad 2026 — solidifying multi-discipline dominance.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2026</div>
+      <div class="timeline-event">1st Runners-Up — English Olympiad, Lexicon / British Council</div>
+      <div class="timeline-detail">Strong finish at the English Olympiad organized by Lexicon and British Council, Khulna, affirming language excellence.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">2027 →</div>
+      <div class="timeline-event">CAIE GCSE O Level Examinations</div>
+      <div class="timeline-detail">Preparing for the upcoming O Level examination — the next milestone in a stellar academic journey.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT / INTERESTS -->
+<section id="about">
+  <div class="section-label">Profile</div>
+  <h2 class="section-title">Passions &amp; <em>Dimensions</em></h2>
+
+  <div class="interests-container">
+    <div>
+      <div class="interest-category">
+        <div class="interest-cat-label">Academic Passions</div>
+        <div class="interest-tags">
+          <span class="interest-tag">Astrophysics</span>
+          <span class="interest-tag">Quantum Physics</span>
+          <span class="interest-tag">Chemistry Experiments</span>
+          <span class="interest-tag">Programming</span>
+          <span class="interest-tag">History</span>
+          <span class="interest-tag">Geography</span>
+          <span class="interest-tag">Religion</span>
+          <span class="interest-tag">International Politics</span>
+        </div>
+      </div>
+
+      <div class="interest-category">
+        <div class="interest-cat-label">Beyond Academics</div>
+        <div class="interest-tags">
+          <span class="interest-tag">⛸ Skating</span>
+          <span class="interest-tag">♟ Chess</span>
+          <span class="interest-tag">⚽ Football</span>
+          <span class="interest-tag">🔬 Home Laboratory</span>
+          <span class="interest-tag">Science Fests</span>
+          <span class="interest-tag">Debate</span>
+        </div>
+      </div>
+
+      <div class="interest-category" style="margin-top:2rem">
+        <div class="interest-cat-label">Affiliations</div>
+        <div class="interest-tags">
+          <span class="interest-tag">NDF-BD</span>
+          <span class="interest-tag">American Corner</span>
+          <span class="interest-tag">British Council</span>
+          <span class="interest-tag">South Herald English School</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="interest-cat-label" style="margin-bottom:1.5rem">Language Proficiency</div>
+      <div class="languages-grid">
+        <div class="lang-item">
+          <span class="lang-name">Bangla</span>
+          <div class="lang-bar"><div class="lang-fill" data-width="100"></div></div>
+          <span class="lang-level">Native</span>
+        </div>
+        <div class="lang-item">
+          <span class="lang-name">English</span>
+          <div class="lang-bar"><div class="lang-fill" data-width="95"></div></div>
+          <span class="lang-level">Fluent</span>
+        </div>
+        <div class="lang-item">
+          <span class="lang-name">Hindi</span>
+          <div class="lang-bar"><div class="lang-fill" data-width="85"></div></div>
+          <span class="lang-level">Fluent</span>
+        </div>
+        <div class="lang-item">
+          <span class="lang-name">Urdu</span>
+          <div class="lang-bar"><div class="lang-fill" data-width="45"></div></div>
+          <span class="lang-level">Partial</span>
+        </div>
+        <div class="lang-item">
+          <span class="lang-name">Spanish</span>
+          <div class="lang-bar"><div class="lang-fill" data-width="35"></div></div>
+          <span class="lang-level">Partial</span>
+        </div>
+        <div class="lang-item">
+          <span class="lang-name">Assamese</span>
+          <div class="lang-bar"><div class="lang-fill" data-width="30"></div></div>
+          <span class="lang-level">Partial</span>
+        </div>
+      </div>
+
+      <div style="margin-top:3rem; padding:2rem; border:1px solid var(--border); background:var(--bg2);">
+        <div class="interest-cat-label" style="margin-bottom:1rem">Lab Note</div>
+        <p style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-style:italic; color:rgba(232,244,253,0.75); line-height:1.8;">
+          "I have built my own chemistry laboratory at home to pursue hands-on scientific exploration — because the universe rewards those who refuse to only read about it."
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="section-label" style="justify-content:center">Connect</div>
+  <h2 class="section-title" style="text-align:center">Get in <em>Touch</em></h2>
+  <p style="text-align:center; color:var(--text-muted); font-size:0.8rem; letter-spacing:0.05em; max-width:500px; margin:0 auto;">
+    Whether it's science, olympiads, language, or ideas that span the cosmos — reach out.
+  </p>
+
+  <div class="contact-links">
+    <a href="mailto:sayantanroykpc2009@gmail.com" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      Email
+    </a>
+    <a href="https://www.instagram.com/sayantanroy2726/" target="_blank" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      Instagram
+    </a>
+    <a href="https://www.facebook.com/sayantan.roy.2022" target="_blank" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+      Facebook
+    </a>
+    <a href="https://x.com/sayantanroy2726" target="_blank" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      X / Twitter
+    </a>
+    <a href="https://www.linkedin.com/in/sayantan-roy-49b831393/" target="_blank" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      LinkedIn
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Sayantan Roy &nbsp;·&nbsp; Khulna, Bangladesh &nbsp;·&nbsp; Reaching for the stars</p>
+</footer>
+
+<script>
+// Stars canvas
+const canvas = document.getElementById('starsCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, stars = [];
+
+function resizeCanvas() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  generateStars();
+}
+
+function generateStars() {
+  stars = [];
+  for (let i = 0; i < 280; i++) {
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.5,
+      alpha: Math.random(),
+      speed: Math.random() * 0.3 + 0.05,
+      twinkleSpeed: Math.random() * 0.02 + 0.005,
+      twinkleDir: Math.random() > 0.5 ? 1 : -1
+    });
+  }
+}
+
+function drawStars() {
+  ctx.clearRect(0, 0, W, H);
+  stars.forEach(s => {
+    s.alpha += s.twinkleSpeed * s.twinkleDir;
+    if (s.alpha >= 1 || s.alpha <= 0.1) s.twinkleDir *= -1;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200,230,255,${s.alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+drawStars();
+
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const trail = document.getElementById('cursorTrail');
+let mx = 0, my = 0, tx = 0, ty = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+
+function animateTrail() {
+  tx += (mx - tx) * 0.12;
+  ty += (my - ty) * 0.12;
+  trail.style.left = tx + 'px';
+  trail.style.top = ty + 'px';
+  requestAnimationFrame(animateTrail);
+}
+animateTrail();
+
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '20px';
+    cursor.style.height = '20px';
+    cursor.style.background = 'var(--accent2)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '12px';
+    cursor.style.height = '12px';
+    cursor.style.background = 'var(--accent)';
+  });
+});
+
+// Intersection Observer for reveals
+const reveals = document.querySelectorAll('.reveal, .timeline-item');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(r => observer.observe(r));
+
+// Counter animation
+const counters = document.querySelectorAll('[data-target]');
+const counterObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const target = +e.target.dataset.target;
+      let count = 0;
+      const step = target / 50;
+      const interval = setInterval(() => {
+        count += step;
+        if (count >= target) { count = target; clearInterval(interval); }
+        e.target.textContent = Math.floor(count);
+      }, 30);
+      counterObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => counterObserver.observe(c));
+
+// Language bars animation
+const langBars = document.querySelectorAll('.lang-fill');
+const langObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.width = e.target.dataset.width + '%';
+      langObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+langBars.forEach(b => langObserver.observe(b));
+</script>
+</body>
+</html>
